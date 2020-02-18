@@ -102,14 +102,21 @@ class UCIEngine(EngineWrapper):
     def search(self, board, wtime, btime, winc, binc):
         self.engine.position(board)
         cmds = self.go_commands
-        best_move, _ = self.engine.go(
-            wtime=wtime,
-            btime=btime,
-            winc=winc,
-            binc=binc,
-            depth=cmds.get("depth"),
-            nodes=cmds.get("nodes"),
-            movetime=cmds.get("movetime")
+        nodes = cmds.get("nodes", None)
+        depth = cmds.get("depth", None)
+        movetime = cmds.get("movetime", None)
+        if nodes:
+            best_move, _ = self.engine.go(nodes=nodes)
+        elif depth:
+            best_move, _ = self.engine.go(depth=depth)
+        elif movetime:
+            best_move, _ = self.engine.go(movetime=movetime)
+        else:
+            best_move, _ = self.engine.go(
+                wtime=wtime,
+                btime=btime,
+                winc=winc,
+                binc=binc
         )
         return best_move
 
