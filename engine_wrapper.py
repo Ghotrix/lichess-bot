@@ -5,6 +5,8 @@ import chess.uci
 import backoff
 import subprocess
 
+logger = logging.getLogger(__name__)
+
 @backoff.on_exception(backoff.expo, BaseException, max_time=120)
 def create_engine(config, board):
     cfg = config["engine"]
@@ -102,7 +104,7 @@ class UCIEngine(EngineWrapper):
     def search(self, board, wtime, btime, winc, binc):
         self.engine.position(board)
         cmds = self.go_commands
-        print(cmds)
+        logger.info("Got cmds: {}".format(cmds))
         nodes = cmds.get("nodes", None)
         depth = cmds.get("depth", None)
         movetime = cmds.get("movetime", None)
