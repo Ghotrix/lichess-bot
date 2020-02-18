@@ -4,6 +4,7 @@ import chess.xboard
 import chess.uci
 import backoff
 import subprocess
+import logging
 
 logger = logging.getLogger(__name__)
 
