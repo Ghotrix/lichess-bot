@@ -93,12 +93,24 @@ class UCIEngine(EngineWrapper):
 
     def search_with_ponder(self, board, wtime, btime, winc, binc, ponder=False):
         self.engine.position(board)
-        best_move, ponder_move = self.engine.go(
-            wtime=wtime,
-            btime=btime,
-            winc=winc,
-            binc=binc,
-            ponder=ponder
+        cmds = self.go_commands
+        logger.info("Got cmds: {}".format(cmds))
+        nodes = cmds.get("nodes", None)
+        depth = cmds.get("depth", None)
+        movetime = cmds.get("movetime", None)
+        if nodes:
+            best_move, ponder_move = self.engine.go(nodes=nodes, ponder=ponder)
+        elif depth:
+            best_move, ponder_move = self.engine.go(depth=depth, ponder=ponder)
+        elif movetime:
+            best_move, ponder_move = self.engine.go(movetime=movetime, ponder=ponder)
+        else:
+            best_move, ponder_move = self.engine.go(
+                wtime=wtime,
+                btime=btime,
+                winc=winc,
+                binc=binc,
+                ponder=ponder
         )
         return ( best_move , ponder_move )
 
